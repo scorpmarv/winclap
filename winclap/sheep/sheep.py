@@ -1,25 +1,8 @@
+import os
 
-def sheep_function():
+
+def sheep_function(dataset):
     test_cases = 0
-    dataset = []
-    while test_cases == 0:
-        try:
-            value = int(input('Please select how many test cases you want to run (remember min=1, max=100): '))
-            if 0 < value < 101:
-                test_cases = value
-            else:
-                raise ValueError
-        except ValueError:
-            print('That is not a valid number')
-
-    while test_cases > 0:
-        try:
-            current_number = int(input('Please insert a number: '))
-            dataset.append(current_number)
-            test_cases -= 1
-        except ValueError:
-            print('That is not a valid number')
-
     for number in dataset:
         test_cases += 1
         iteration = 1
@@ -36,5 +19,39 @@ def sheep_function():
             print('Case #{}: INSOMNIA'.format(test_cases))
 
 
+def input_parameters(content):
+    test_cases = 0
+    dataset = []
+    try:
+        value = content.pop(0)
+        if 0 < value < 101:
+            test_cases = value
+        else:
+            raise ValueError
+    except ValueError:
+        print('Invalid number of cases')
+
+    if test_cases == len(content):
+        while test_cases > 0:
+            try:
+                current_number = content.pop(0)
+                dataset.append(current_number)
+                test_cases -= 1
+            except ValueError:
+                print('That is not a valid number')
+        sheep_function(dataset)
+    else:
+        print('The number of elements do not match, expected: {}, given: {}'.format(test_cases, len(content)))
+
+
+def open_file():
+    module_dir = os.path.dirname(__file__)
+    file_path = os.path.join(module_dir, 'c-input.in')
+    with open(file_path) as f:
+        content = f.readlines()
+    content = [int(x.strip()) for x in content]
+    input_parameters(content)
+
+
 if __name__ == "__main__":
-    sheep_function()
+    open_file()
